@@ -1,11 +1,7 @@
 package twitter
 
 import (
-	"bytes"
-	"encoding/json"
 	"github.com/mrjones/oauth"
-	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -15,8 +11,6 @@ var (
 	requestTokenPath   = "/oauth/request_token"
 	authorizeTokenPath = "/oauth/authorize"
 	accessTokenPath    = "/oauth/access_token"
-
-	homeTimelinePath = "/1.1/statuses/home_timeline.json"
 )
 
 type Client struct {

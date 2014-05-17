@@ -19,6 +19,8 @@ func main() {
 	for _, tweet := range tweets {
 		fmt.Printf("%s: %s\n", tweet.User.ScreenName, tweet.Text)
 	}
+
+	client.UpdateStatus("Tweet test")
 }
 ```
 

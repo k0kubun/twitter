@@ -1,5 +1,12 @@
 package twitter
 
+import (
+	"bytes"
+	"encoding/json"
+	"io/ioutil"
+	"log"
+)
+
 type Tweet struct {
 	Id              int64
 	User            *User
@@ -12,7 +19,7 @@ type Tweet struct {
 
 func (c *Client) HomeTimeline() ([]Tweet, error) {
 	response, err := c.get(
-		c.apiUrl(homeTimelinePath),
+		c.apiUrl("/1.1/statuses/home_timeline.json"),
 		map[string]string{},
 	)
 	if err != nil {
@@ -28,4 +35,14 @@ func (c *Client) HomeTimeline() ([]Tweet, error) {
 	tweets := []Tweet{}
 	decoder.Decode(&tweets)
 	return tweets, nil
+}
+
+func (c *Client) UpdateStatus(text string) error {
+	_, err := c.post(
+		c.apiUrl("/1.1/statuses/update.json"),
+		map[string]string{
+			"status": text,
+		},
+	)
+	return err
 }

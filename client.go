@@ -29,14 +29,13 @@ type Client struct {
 	token *oauth.AccessToken
 }
 
-func (c *Client) HomeTimeline() []Tweet {
+func (c *Client) HomeTimeline() ([]Tweet, error) {
 	response, err := c.get(
 		c.apiUrl(homeTimelinePath),
 		map[string]string{},
 	)
 	if err != nil {
-		log.Println(err)
-		return nil
+		return nil, err
 	}
 
 	data, err := ioutil.ReadAll(response.Body)
@@ -47,7 +46,7 @@ func (c *Client) HomeTimeline() []Tweet {
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	tweets := []Tweet{}
 	decoder.Decode(&tweets)
-	return tweets
+	return tweets, nil
 }
 
 func (c *Client) get(requestUrl string, params map[string]string) (*http.Response, error) {

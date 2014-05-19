@@ -30,6 +30,18 @@ func (c *Client) HomeTimeline() ([]Tweet, error) {
 	return c.tweetsByResponse(response)
 }
 
+func (c *Client) MentionsTimeline() ([]Tweet, error) {
+	response, err := c.get(
+		c.apiUrl("/1.1/statuses/mentions_timeline.json"),
+		map[string]string{},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.tweetsByResponse(response)
+}
+
 func (c *Client) UserTimeline(screenName string) ([]Tweet, error) {
 	response, err := c.get(
 		c.apiUrl("/1.1/statuses/user_timeline.json"),

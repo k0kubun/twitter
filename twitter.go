@@ -3,6 +3,7 @@ package twitter
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -51,6 +52,16 @@ func (c *Client) UpdateStatus(text string) error {
 		c.apiUrl("/1.1/statuses/update.json"),
 		map[string]string{
 			"status": text,
+		},
+	)
+	return err
+}
+
+func (c *Client) Favorite(tweetId int64) error {
+	_, err := c.post(
+		c.apiUrl("/1.1/favorites/create.json"),
+		map[string]string{
+			"id": fmt.Sprintf("%d", tweetId),
 		},
 	)
 	return err

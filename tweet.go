@@ -37,6 +37,28 @@ func (c *Client) HomeTimeline() ([]Tweet, error) {
 	return tweets, nil
 }
 
+func (c *Client) UserTimeline(screenName string) ([]Tweet, error) {
+	response, err := c.get(
+		c.apiUrl("/1.1/statuses/user_timeline.json"),
+		map[string]string{
+			"screen_name": screenName,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	tweets := []Tweet{}
+	decoder.Decode(&tweets)
+	return tweets, nil
+}
+
 func (c *Client) UpdateStatus(text string) error {
 	_, err := c.post(
 		c.apiUrl("/1.1/statuses/update.json"),

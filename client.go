@@ -1,6 +1,7 @@
 package twitter
 
 import (
+	"fmt"
 	"github.com/mrjones/oauth"
 	"net/http"
 )
@@ -60,6 +61,7 @@ func (c *Client) accessToken() *oauth.AccessToken {
 	return c.token
 }
 
-func (c *Client) apiUrl(apiPath string) string {
+func (c *Client) apiUrl(format string, a ...interface{}) string {
+	apiPath := fmt.Sprintf(format, a...)
 	return twitterApiUrl + apiPath
 }

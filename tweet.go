@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"net/http"
 )
 
 type Tweet struct {
@@ -26,15 +27,7 @@ func (c *Client) HomeTimeline() ([]Tweet, error) {
 		return nil, err
 	}
 
-	data, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	tweets := []Tweet{}
-	decoder.Decode(&tweets)
-	return tweets, nil
+	return c.tweetsByResponse(response)
 }
 
 func (c *Client) UserTimeline(screenName string) ([]Tweet, error) {
@@ -48,15 +41,7 @@ func (c *Client) UserTimeline(screenName string) ([]Tweet, error) {
 		return nil, err
 	}
 
-	data, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	tweets := []Tweet{}
-	decoder.Decode(&tweets)
-	return tweets, nil
+	return c.tweetsByResponse(response)
 }
 
 func (c *Client) UpdateStatus(text string) error {
@@ -67,4 +52,16 @@ func (c *Client) UpdateStatus(text string) error {
 		},
 	)
 	return err
+}
+
+func (c *Client) tweetsByResponse(response *http.Response) ([]Tweet, error) {
+	data, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	tweets := []Tweet{}
+	decoder.Decode(&tweets)
+	return tweets, nil
 }

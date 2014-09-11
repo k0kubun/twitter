@@ -86,6 +86,14 @@ func (c *Client) Retweet(tweetId int64) error {
 	return err
 }
 
+func (c *Client) Destroy(tweetId int64) error {
+	_, err := c.post(
+		c.apiUrl("/1.1/statuses/destroy/%d.json", tweetId),
+		map[string]string{},
+	)
+	return err
+}
+
 func (c *Client) tweetsByResponse(response *http.Response) ([]Tweet, error) {
 	data, err := ioutil.ReadAll(response.Body)
 	if err != nil {

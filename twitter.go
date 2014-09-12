@@ -94,6 +94,38 @@ func (c *Client) Destroy(tweetId int64) error {
 	return err
 }
 
+func (c *Client) Lists() ([]List, error) {
+	response, err := c.get(
+		c.apiUrl("/1.1/lists/list.json"),
+		map[string]string{},
+	)
+	if err != nil {
+		return nil, err
+	}
+	data, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	lists := []List{}
+	decoder.Decode(&lists)
+	return lists, nil
+}
+
+func (c *Client) ListTimeline(listId string) ([]Tweet, error) {
+	response, err := c.get(
+		c.apiUrl("/1.1/lists/statuses.json"),
+		map[string]string{
+			"list_id": listId,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.tweetsByResponse(response)
+}
+
 func (c *Client) tweetsByResponse(response *http.Response) ([]Tweet, error) {
 	data, err := ioutil.ReadAll(response.Body)
 	if err != nil {

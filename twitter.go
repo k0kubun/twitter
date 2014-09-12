@@ -112,6 +112,20 @@ func (c *Client) Lists() ([]List, error) {
 	return lists, nil
 }
 
+func (c *Client) ListTimeline(listId string) ([]Tweet, error) {
+	response, err := c.get(
+		c.apiUrl("/1.1/lists/statuses.json"),
+		map[string]string{
+			"list_id": listId,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.tweetsByResponse(response)
+}
+
 func (c *Client) tweetsByResponse(response *http.Response) ([]Tweet, error) {
 	data, err := ioutil.ReadAll(response.Body)
 	if err != nil {

@@ -112,11 +112,12 @@ func (c *Client) Lists() ([]List, error) {
 	return lists, nil
 }
 
-func (c *Client) ListTimeline(listId string) ([]Tweet, error) {
+func (c *Client) ListTimeline(ownerScreenName string, slug string) ([]Tweet, error) {
 	response, err := c.get(
 		c.apiUrl("/1.1/lists/statuses.json"),
 		map[string]string{
-			"list_id": listId,
+			"owner_screen_name": ownerScreenName,
+			"slug":              slug,
 		},
 	)
 	if err != nil {

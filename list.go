@@ -1,6 +1,7 @@
 package twitter
 
 type List struct {
+	Slug        string `json:"slug"`
 	FullName    string `json:"full_name"`
 	Name        string `json:"name"`
 	IdStr       string `json:"id_str"`

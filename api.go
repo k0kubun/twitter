@@ -127,14 +127,34 @@ func (c *Client) ListTimeline(ownerScreenName string, slug string) ([]Tweet, err
 	return c.tweetsByResponse(response)
 }
 
+func (c *Client) Search(query string) ([]Tweet, error) {
+	response, err := c.get(
+		c.apiUrl("/1.1/search/tweets.json"),
+		map[string]string{
+			"q": query,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	decoder := c.jsonDecoder(response)
+	result := SearchResult{}
+	decoder.Decode(&result)
+	return result.Statuses, nil
+}
+
 func (c *Client) tweetsByResponse(response *http.Response) ([]Tweet, error) {
+	decoder := c.jsonDecoder(response)
+	tweets := []Tweet{}
+	decoder.Decode(&tweets)
+	return tweets, nil
+}
+
+func (c *Client) jsonDecoder(response *http.Response) *json.Decoder {
 	data, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	tweets := []Tweet{}
-	decoder.Decode(&tweets)
-	return tweets, nil
+	return json.NewDecoder(bytes.NewReader(data))
 }

@@ -25,3 +25,7 @@ type List struct {
 	Description string `json:"description"`
 	User        *User
 }
+
+type SearchResult struct {
+	Statuses []Tweet
+}

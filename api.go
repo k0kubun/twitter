@@ -127,6 +127,22 @@ func (c *Client) ListTimeline(ownerScreenName string, slug string) ([]Tweet, err
 	return c.tweetsByResponse(response)
 }
 
+func (c *Client) AddToList(ownerScreenName string, screenName string, slug string) error {
+	_, err := c.post(
+		c.apiUrl("/1.1/lists/members/create.json"),
+		map[string]string{
+			"owner_screen_name": ownerScreenName,
+			"screen_name":       screenName,
+			"slug":              slug,
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (c *Client) Search(query string) ([]Tweet, error) {
 	response, err := c.get(
 		c.apiUrl("/1.1/search/tweets.json"),
